@@ -591,6 +591,10 @@ h3 {
   background: #edf3f8;
 }
 
+.badge.word-count {
+  background: var(--green);
+}
+
 .hero-board {
   position: relative;
   display: grid;

@@ -441,6 +441,11 @@ const lessons = [
   }
 ];
 
+const storyLessonCount = lessons.length;
+const wordBankUnits = window.POKEPIA_WORD_BANK || [];
+
+lessons.push(...createWordMissions(wordBankUnits));
+
 const pets = [
   { name: "Bunbun", species: "小兔夥伴", className: "bunny", at: 0 },
   { name: "Mimi", species: "花貓夥伴", className: "cat", at: 1 },
@@ -542,6 +547,68 @@ function getCorrectIndex(question) {
   return question.options.findIndex((option) => option.correct);
 }
 
+function createWordMissions(units) {
+  return units.flatMap((unit, unitIndex) => {
+    const normalizedWords = unit.words.map(([en, zh]) => ({ en, zh, unit }));
+    return chunkWords(normalizedWords, 6).map((chunk, chunkIndex) => {
+      const missionNumber = chunkIndex + 1;
+      return {
+        id: `word-${unit.id}-${missionNumber}`,
+        title: `${unit.title} ${missionNumber}`,
+        kind: unit.kind,
+        reward: 35,
+        badge: `${unit.title}${missionNumber}`,
+        enemy: getWordEnemy(unitIndex, chunkIndex),
+        goal: unit.goal,
+        questions: chunk.map((word, wordIndex) => createWordQuestion(word, normalizedWords, wordIndex, chunkIndex))
+      };
+    });
+  });
+}
+
+function chunkWords(words, size) {
+  const chunks = [];
+  for (let index = 0; index < words.length; index += size) {
+    chunks.push(words.slice(index, index + size));
+  }
+  return chunks;
+}
+
+function createWordQuestion(word, allWords, wordIndex, chunkIndex) {
+  const distractors = allWords
+    .filter((item) => item.en !== word.en)
+    .sort((a, b) => {
+      const aScore = hashText(`${word.en}-${chunkIndex}-${wordIndex}-${a.en}`);
+      const bScore = hashText(`${word.en}-${chunkIndex}-${wordIndex}-${b.en}`);
+      return aScore - bScore;
+    })
+    .slice(0, 3);
+
+  return {
+    q: `Which one means 「${word.zh}」?`,
+    read: `Which one means ${word.en}?`,
+    options: [
+      createWordOption(word, true),
+      ...distractors.map((item) => createWordOption(item, false))
+    ],
+    hint: `${word.zh} 的英文是 ${word.en}。先聽聲音，再看看字母形狀。`
+  };
+}
+
+function createWordOption(word, correct) {
+  return {
+    text: word.en,
+    zh: `${word.en} 是「${word.zh}」。把它收進你的 POKEPIA 單字圖鑑吧。`,
+    say: word.en,
+    correct
+  };
+}
+
+function getWordEnemy(unitIndex, chunkIndex) {
+  const enemies = ["Word Bubble", "Sound Seed", "Memory Puff", "Quiz Jelly", "Letter Sprite", "Review Star"];
+  return enemies[(unitIndex + chunkIndex) % enemies.length];
+}
+
 function getShuffledOptions(question, lessonId, questionIndex) {
   return question.options
     .map((option, originalIndex) => ({ ...option, originalIndex }))
@@ -593,10 +660,15 @@ function renderCollection() {
 }
 
 function renderBadges() {
-  els.badgeStrip.innerHTML = lessons.map((lesson) => {
+  const storyBadges = lessons.slice(0, storyLessonCount).map((lesson) => {
     const cleared = state.cleared.includes(lesson.id);
     return `<span class="badge ${cleared ? "" : "locked"}">${cleared ? lesson.badge : "Locked"}</span>`;
   }).join("");
+  const wordMissionTotal = lessons.length - storyLessonCount;
+  const wordMissionCleared = lessons
+    .slice(storyLessonCount)
+    .filter((lesson) => state.cleared.includes(lesson.id)).length;
+  els.badgeStrip.innerHTML = `${storyBadges}<span class="badge word-count">字庫 ${wordMissionCleared}/${wordMissionTotal}</span>`;
 }
 
 function renderMap() {
