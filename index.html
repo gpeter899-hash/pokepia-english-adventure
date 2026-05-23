@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2f7dff">
+  <meta name="description" content="POKEPIA英文冒險：適合英文初學者到國小四年級的遊戲式英文學習網站。">
+  <title>POKEPIA英文冒險</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="trainer-panel" aria-label="玩家進度">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">PK</div>
+        <div>
+          <p class="eyebrow">Grade 1-4 English Quest</p>
+          <h1>POKEPIA英文冒險</h1>
+        </div>
+      </div>
+
+      <section class="trainer-card">
+        <div class="trainer-row">
+          <div>
+            <p class="label">小小冒險家</p>
+            <h2 id="trainerName">Rookie</h2>
+          </div>
+          <button class="icon-button" id="resetBtn" type="button" title="重置進度" aria-label="重置進度">
+            <span aria-hidden="true">R</span>
+          </button>
+        </div>
+        <div class="level-line">
+          <span id="trainerRank">Starter</span>
+          <strong id="trainerXp">0 XP</strong>
+        </div>
+        <div class="progress-track" aria-label="總經驗進度">
+          <div id="xpBar" class="progress-fill"></div>
+        </div>
+      </section>
+
+      <section class="companion-card">
+        <p class="label">目前夥伴</p>
+        <div class="pet-stage">
+          <div id="petSprite" class="animal-sprite bunny" aria-hidden="true"></div>
+        </div>
+        <div class="pet-info">
+          <h2 id="petName">Bunbun</h2>
+          <span id="petLevel">Lv. 1</span>
+        </div>
+        <div class="progress-track small" aria-label="夥伴升等進度">
+          <div id="petBar" class="progress-fill pet-fill"></div>
+        </div>
+      </section>
+
+      <section class="collection-card">
+        <p class="label">夥伴圖鑑</p>
+        <div id="collectionGrid" class="collection-grid"></div>
+      </section>
+    </aside>
+
+    <main class="quest-area">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">初學者到國小四年級</p>
+          <h2>學英文、收夥伴、闖島嶼</h2>
+        </div>
+        <div class="badge-strip" id="badgeStrip" aria-label="已取得徽章"></div>
+      </header>
+
+      <section class="hero-board">
+        <div class="hero-art" aria-hidden="true">
+          <div class="sun-disc"></div>
+          <div class="cloud puff-one"></div>
+          <div class="cloud puff-two"></div>
+          <div class="island island-one"></div>
+          <div class="island island-two"></div>
+          <div class="island island-three"></div>
+          <div class="boss-tower"></div>
+        </div>
+        <div class="hero-copy">
+          <p class="eyebrow">POKEPIA Adventure</p>
+          <h2>從 ABC、單字、句型到短句閱讀，一步一步把英文變成遊戲任務。</h2>
+          <p>這版先鎖定英文初學者到國小四年級：字母自然發音、數字顏色、教室、動物、家庭、日常動作、天氣心情與簡單句型。</p>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="map-panel">
+          <div class="section-heading">
+            <div>
+              <p class="label">Quest Map</p>
+              <h3>冒險關卡</h3>
+            </div>
+            <span id="completionText">0 / 8 cleared</span>
+          </div>
+          <div id="questMap" class="quest-map"></div>
+        </div>
+
+        <section class="battle-panel" aria-live="polite">
+          <div class="battle-header">
+            <div>
+              <p class="label" id="lessonType">Phonics</p>
+              <h3 id="lessonTitle">選擇一個關卡開始</h3>
+            </div>
+            <span id="lessonReward" class="reward-chip">+0 XP</span>
+          </div>
+
+          <div class="battle-stage">
+            <div class="enemy-card">
+              <div id="enemySprite" class="challenge-sprite" aria-hidden="true"></div>
+              <div>
+                <p class="label">Challenge</p>
+                <h4 id="enemyName">Word Bubble</h4>
+              </div>
+            </div>
+            <div class="question-card">
+              <p id="questionMeta" class="question-meta">完成任務可解鎖下一座島。</p>
+              <h4 id="questionText">請從左側選擇學習關卡。</h4>
+              <div id="answerList" class="answer-list"></div>
+            </div>
+          </div>
+
+          <div class="battle-actions">
+            <button id="speakQuestionBtn" class="secondary-button" type="button">朗讀題目</button>
+            <button id="hintBtn" class="secondary-button" type="button">小提示</button>
+            <button id="nextBtn" class="primary-button" type="button" disabled>開始任務</button>
+          </div>
+          <div class="teacher-caption" aria-live="polite">
+            <span class="teacher-dot" aria-hidden="true"></span>
+            <span id="teacherCaption">老師會在這裡陪你唸英文、給提示和鼓勵。</span>
+          </div>
+          <p id="feedback" class="feedback"></p>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
